@@ -228,22 +228,22 @@ const TEAM = {
   players: [
     // photo: cutout image like "img/player_1.png" (or leave "" for initials)
     // spartan: optional AI "Spartan" portrait shown on the back of the card
-    { num:11, name:"Player 1",  pos:"Guard",    height:"1.85 m", photo:"img/player_1.png", spartan:"img/spartian_1.png" },
-    { num:5,  name:"Player 2",  pos:"Guard",    height:"", photo:"img/player_2.png", spartan:"img/spartian_2.png" },
-    { num:6,  name:"Player 3",  pos:"Forward",  height:"", photo:"img/player_3.png", spartan:"img/spartian_3.png" },
-    { num:22, name:"Player 4",  pos:"Guard",    height:"", photo:"img/player_4.png", spartan:"img/spartian_4.png" },
-    { num:42, name:"Player 5",  pos:"Guard",    height:"", photo:"img/player_5.png", spartan:"img/spartian_5.png" },
-    { num:45, name:"Player 6",  pos:"Center",   height:"", photo:"img/player_6.png", spartan:"img/spartian_6.png" },
-    { num:7,  name:"Player 7",  pos:"Forward",  height:"", photo:"img/player_7.png", spartan:"img/spartian_7.png" },
-    { num:8,  name:"Player 8",  pos:"Guard",    height:"", photo:"img/player_8.png", spartan:"img/spartian_8.png" },
-    { num:10, name:"Player 9",  pos:"Forward",  height:"", photo:"img/player_9.png", spartan:"img/spartian_9.png" },
-    { num:12, name:"Player 10", pos:"Guard",    height:"", photo:"img/player_10.png", spartan:"img/spartian_10.png" },
-    { num:23, name:"Player 11", pos:"Forward",  height:"", photo:"img/player_11.png", spartan:"img/spartian_11.png" },
-    { num:34, name:"Player 12", pos:"Center",   height:"", photo:"img/player_12.png", spartan:"img/spartian_12.png" }
+    { num:11, name:"Player 1",  pos:"Guard",    height:"1.85 m", photo:"img/cards/player_1.png", spartan:"img/spartian_1.png" },
+    { num:5,  name:"Player 2",  pos:"Guard",    height:"", photo:"img/cards/player_2.png", spartan:"img/spartian_2.png" },
+    { num:6,  name:"Player 3",  pos:"Forward",  height:"", photo:"img/cards/player_3.png", spartan:"img/spartian_3.png" },
+    { num:22, name:"Player 4",  pos:"Guard",    height:"", photo:"img/cards/player_4.png", spartan:"img/spartian_4.png" },
+    { num:42, name:"Player 5",  pos:"Guard",    height:"", photo:"img/cards/player_5.png", spartan:"img/spartian_5.png" },
+    { num:45, name:"Player 6",  pos:"Center",   height:"", photo:"img/cards/player_6.png", spartan:"img/spartian_6.png" },
+    { num:7,  name:"Player 7",  pos:"Forward",  height:"", photo:"img/cards/player_7.png", spartan:"img/spartian_7.png" },
+    { num:8,  name:"Player 8",  pos:"Guard",    height:"", photo:"img/cards/player_8.png", spartan:"img/spartian_8.png" },
+    { num:10, name:"Player 9",  pos:"Forward",  height:"", photo:"img/cards/player_9.png", spartan:"img/spartian_9.png" },
+    { num:12, name:"Player 10", pos:"Guard",    height:"", photo:"img/cards/player_10.png", spartan:"img/spartian_10.png" },
+    { num:23, name:"Player 11", pos:"Forward",  height:"", photo:"img/cards/player_11.png", spartan:"img/spartian_11.png" },
+    { num:34, name:"Player 12", pos:"Center",   height:"", photo:"img/cards/player_12.png", spartan:"img/spartian_12.png" }
   ],
 
   coaches: [
-    { name:"Mario Pallas & Benedict Mulenga", role:"Head Coaches", photo:"img/coach.png", spartan:"img/spartan_coach.png" }
+    { name:"Mario Pallas & Benedict Mulenga", role:"Head Coaches", photo:"img/cards/coach.png", spartan:"img/spartan_coach.png" }
   ],
 
   news: [
@@ -314,7 +314,6 @@ $("newsList").innerHTML = TEAM.news.map(n=>`
   <article class="card"><time>${new Date(n.date).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</time>
   <h3>${esc(n.title)}</h3><p>${esc(n.text)}</p></article>`).join("");
 
-$("yr").textContent = new Date().getFullYear();
 </script>
 </body>
 </html>
