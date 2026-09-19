@@ -164,7 +164,7 @@
       <a href="#roster" class="btn">Meet the Team</a>
       <a href="#join" class="btn ghost">Join the Team</a>
     </div>
-    <img class="hero-logo" src="img/logo.jpg" alt="ISL Spartans logo">
+    <img class="hero-logo" src="img/logo.png" alt="ISL Spartans logo">
   </div>
 </header>
 
@@ -264,11 +264,11 @@ const TEAM = {
   ],
       
   coaches: [
-    { name:"Coach Name", role:"Head Coach",      photo:"img/coach.png" }
+    { name:"Coach Name", role:"Head Coach",  photo:"img/coach.png" }
   ],
 
   news: [
-   { date:"2026-08-28", title:"Tryouts open", text:"We're looking for new players. Fill in the form below to sign up for the next session." }
+    { date:"2026-08-28", title:"Tryouts open", text:"We are looking for new players. Come to our Thursday practice at 14:45 in the big gym." }
   ]
 };
 
@@ -315,8 +315,8 @@ document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
 // roster (flip cards)
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const initials = n => n.split(" ").map(w=>w[0]).join("");
-$("players").innerHTML = TEAM.players.map(p=>{
-  const label = (tag)=>`<div class="label"><div class="pos">#${esc(p.num)} · ${esc(p.pos)}</div><h3>${esc(p.name)}</h3><div class="meta">${[p.height,tag].filter(Boolean).map(esc).join(" · ")}</div></div>`;
+$("players").innerHTML = [...TEAM.players, ...TEAM.coaches.map(c=>({num:"",name:c.name,pos:c.role,height:"",photo:c.photo,spartan:c.spartan||""}))].map(p=>{
+  const label = (tag)=>`<div class="label"><div class="pos">${p.num!==""?"#"+esc(p.num)+" · ":""}${esc(p.pos)}</div><h3>${esc(p.name)}</h3><div class="meta">${[p.height,tag].filter(Boolean).map(esc).join(" · ")}</div></div>`;
   const front = p.photo ? `<img class="pic" src="${esc(p.photo)}" alt="${esc(p.name)}">` : `<div class="init">${esc(initials(p.name))}</div>`;
   const back = p.spartan ? `<img class="pic ai" src="${esc(p.spartan)}" alt="${esc(p.name)} as a Spartan warrior">`
              : p.photo ? `<img class="pic filtered" src="${esc(p.photo)}" alt="">` : `<div class="init" style="color:#ffb27a">${esc(initials(p.name))}</div>`;
@@ -326,27 +326,15 @@ $("players").innerHTML = TEAM.players.map(p=>{
       <div class="face back"><span class="badge">Spartan mode</span><span class="num">${esc(p.num)}</span>${back}${label("This is Sparta")}</div>
     </div></button>`;
 }).join("");
-$("coaches").innerHTML = TEAM.coaches.map(c=>`
-  <div class="flip coach"><div class="face front" style="position:relative;height:100%">
-    ${c.photo?`<img class="pic" src="${esc(c.photo)}" alt="${esc(c.name)}">`:`<div class="init">${esc(initials(c.name))}</div>`}
-    <div class="label"><div class="pos">${esc(c.role)}</div><h3>${esc(c.name)}</h3></div></div></div>`).join("");
-document.querySelectorAll(".flip:not(.coach)").forEach(c=>c.onclick=()=>{
+document.querySelectorAll(".flip").forEach(c=>c.onclick=()=>{
   const on = c.classList.toggle("on"); c.setAttribute("aria-pressed", on);
 });
-
+ 
 // news
 $("newsList").innerHTML = TEAM.news.map(n=>`
   <article class="card"><time>${new Date(n.date).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</time>
   <h3>${esc(n.title)}</h3><p>${esc(n.text)}</p></article>`).join("");
-
-// join form -> opens the visitor's email app with the details filled in
-$("form").onsubmit = e => {
-  e.preventDefault();
-  const f = new FormData(e.target);
-  const body = `Name: ${f.get("name")}\nEmail: ${f.get("email")}\nPosition: ${f.get("pos")||"-"}\n\n${f.get("msg")}`;
-  location.href = `mailto:${TEAM.email}?subject=${encodeURIComponent("Join request: "+f.get("name"))}&body=${encodeURIComponent(body)}`;
-};
-
+ 
 $("yr").textContent = new Date().getFullYear();
 </script>
 </body>
