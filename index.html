@@ -238,7 +238,7 @@
 const TEAM = {
   games: [
     // date: YYYY-MM-DD HH:MM, home: true/false, us/them: scores (leave null if not played yet)
-    { date:"2026-11-27 18:00", opp:"International School Almere", home:false, us:null, them:null },
+    { date:"2026-11-27 18:00", opp:"ISAlmere", home:false, us:null, them:null },
     { date:"2026-12-17 18:00", opp:"International School Hilversum (tentative)", home:true, us:null, them:null }
   ],
   players: [
@@ -247,7 +247,7 @@ const TEAM = {
     { num:23, name:"Omer Noy", pos:"Shooting Guard", height:"", photo:"img/cards/player_1.png", spartan:"img/spartian_1.png" },
     { num:11, name:"Amnon Sher", pos:"Point Guard", height:"", photo:"img/cards/player_2.png", spartan:"img/spartian_2.png" },
     { num:6, name:"Alex Dragomir", pos:"Power Forward", height:"", photo:"img/cards/player_3.png", spartan:"img/spartian_3.png" },
-    { num:0, name:"Declam Onyike", pos:"Shooting Guard", height:"", photo:"img/cards/player_4.png", spartan:"img/spartian_4.png" },
+    { num:0, name:"Declan Onyike", pos:"Shooting Guard", height:"", photo:"img/cards/player_4.png", spartan:"img/spartian_4.png" },
     { num:8, name:"Yoav Eisenstadt", pos:"Center", height:"", photo:"img/cards/player_5.png", spartan:"img/spartian_5.png" },
     { num:25, name:"Alexander Schuring", pos:"Small Forward", height:"", photo:"img/cards/player_6.png", spartan:"img/spartian_6.png" },
     { num:5, name:"Shawn Golan", pos:"Point Guard", height:"", photo:"img/cards/player_7.png", spartan:"img/spartian_7.png", captain:true },
@@ -262,6 +262,7 @@ const TEAM = {
   ],
 
   news: [
+    { date:"2026-11-21", title:"Next up: ISAlmere", text:"We're on the road Friday 27 November to face ISAlmere. Come support the Spartans!" },
     { date:"2026-08-28", title:"Tryouts open", text:"We are looking for new players. Come to our Thursday practice at 14:45 in the big gym." }
   ]
 };
@@ -325,11 +326,22 @@ document.querySelectorAll(".flip").forEach(c=>c.onclick=()=>{
   const on = c.classList.toggle("on"); c.setAttribute("aria-pressed", on);
 });
 
-// coaching staff (separate, non-flip section)
+// coaching staff (separate section, same flip / Spartan-mode cards as the players)
 $("coaches").innerHTML = TEAM.coaches.map(c=>{
-  const pic = c.photo ? `<img class="pic" src="${esc(c.photo)}" alt="${esc(c.name)}">` : `<div class="init">${esc(initials(c.name))}</div>`;
-  return `<div class="coach-card">${pic}<div class="label"><div class="pos">${esc(c.role)}</div><h3>${esc(c.name)}</h3></div></div>`;
+  const p = { num:"", name:c.name, pos:c.role, height:"", photo:c.photo, spartan:c.spartan||"" };
+  const label = (tag)=>`<div class="label"><div class="pos">${esc(p.pos)}</div><h3>${esc(p.name)}</h3><div class="meta">${[tag].filter(Boolean).map(esc).join(" · ")}</div></div>`;
+  const front = p.photo ? `<img class="pic" src="${esc(p.photo)}" alt="${esc(p.name)}">` : `<div class="init">${esc(initials(p.name))}</div>`;
+  const back = p.spartan ? `<img class="pic ai" src="${esc(p.spartan)}" alt="${esc(p.name)} as a Spartan warrior">`
+             : p.photo ? `<img class="pic filtered" src="${esc(p.photo)}" alt="">` : `<div class="init" style="color:#ffb27a">${esc(initials(p.name))}</div>`;
+  return `<button class="flip" aria-label="Flip card for ${esc(p.name)}" aria-pressed="false">
+    <div class="inner">
+      <div class="face front">${front}${label("")}</div>
+      <div class="face back"><span class="badge">Spartan mode</span>${back}${label("This is Sparta")}</div>
+    </div></button>`;
 }).join("");
+document.querySelectorAll("#coaches .flip").forEach(c=>c.onclick=()=>{
+  const on = c.classList.toggle("on"); c.setAttribute("aria-pressed", on);
+});
 
 // news
 $("newsList").innerHTML = TEAM.news.map(n=>`
