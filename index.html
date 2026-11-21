@@ -113,6 +113,14 @@
   .label .meta{color:var(--muted);font-size:.8rem}
   .badge{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.45);font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:99px;color:var(--accent);z-index:2}
   @media(prefers-reduced-motion:reduce){.inner{transition:none}}
+  .coach-card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;height:360px}
+  .coach-card:hover{border-color:var(--accent)}
+  .coach-card .pic{position:absolute;left:0;bottom:0;width:100%;height:88%;object-fit:contain;object-position:center bottom}
+  .coach-card .init{position:absolute;top:32%;width:100%;text-align:center;font-family:Anton;font-size:4rem;color:var(--accent)}
+  .coach-card .label{position:absolute;left:0;right:0;bottom:0;padding:44px 16px 14px;background:linear-gradient(transparent,rgba(4,10,30,.92))}
+  .coach-card .pos{color:var(--accent);font-weight:800;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+  .coach-card h3{font-size:1.5rem;line-height:1.1}
+  .captain-tag{display:inline-block;background:var(--accent);color:#0a1a44;font-weight:800;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-left:8px;vertical-align:middle}
 
   /* NEWS */
   .news{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
@@ -144,6 +152,7 @@
     <a href="#top" class="logo"><img src="img/logo.png" alt="ISL Spartans logo">ISL <b>SPARTANS</b></a>
     <ul>
       <li><a href="#roster">Roster</a></li>
+      <li><a href="#coaches">Coaches</a></li>
       <li><a href="#schedule">Next Game</a></li>
       <li><a href="#news">News</a></li>
       <li><a href="#join">Join</a></li>
@@ -168,10 +177,18 @@
   <div class="wrap">
     <h2>The <span>Roster</span></h2>
     <p class="sub">Meet the 2026/27 ISL Spartans.</p>
-    <img class="team-photo" src="img/team-photo.png" alt="ISL Spartans team photo 2026/27">
-    <div style="height:36px"></div>
+    <!-- Team photo hidden for now — will be updated. To bring back, remove style="display:none" below. -->
+    <img class="team-photo" src="img/team-photo.png" alt="ISL Spartans team photo 2026/27" style="display:none">
     <p class="hint">Tap a player card to flip it and see the Spartan version.</p>
     <div class="grid" id="players"></div>
+  </div>
+</section>
+
+<section id="coaches" style="background:var(--bg)">
+  <div class="wrap">
+    <h2>Coaching <span>Staff</span></h2>
+    <p class="sub">The people behind the team.</p>
+    <div class="grid coach-grid" id="coaches"></div>
   </div>
 </section>
 
@@ -227,18 +244,17 @@ const TEAM = {
   players: [
     // photo: cutout image like "img/player_1.png" (or leave "" for initials)
     // spartan: optional AI "Spartan" portrait shown on the back of the card
-    { num:11, name:"Player 1",  pos:"Guard",    height:"1.85 m", photo:"img/cards/player_1.png", spartan:"img/spartian_1.png" },
-    { num:5,  name:"Player 2",  pos:"Guard",    height:"", photo:"img/cards/player_2.png", spartan:"img/spartian_2.png" },
-    { num:6,  name:"Player 3",  pos:"Forward",  height:"", photo:"img/cards/player_3.png", spartan:"img/spartian_3.png" },
-    { num:22, name:"Player 4",  pos:"Guard",    height:"", photo:"img/cards/player_4.png", spartan:"img/spartian_4.png" },
-    { num:42, name:"Player 5",  pos:"Guard",    height:"", photo:"img/cards/player_5.png", spartan:"img/spartian_5.png" },
-    { num:45, name:"Player 6",  pos:"Center",   height:"", photo:"img/cards/player_6.png", spartan:"img/spartian_6.png" },
-    { num:7,  name:"Player 7",  pos:"Forward",  height:"", photo:"img/cards/player_7.png", spartan:"img/spartian_7.png" },
-    { num:8,  name:"Player 8",  pos:"Guard",    height:"", photo:"img/cards/player_8.png", spartan:"img/spartian_8.png" },
-    { num:10, name:"Player 9",  pos:"Forward",  height:"", photo:"img/cards/player_9.png", spartan:"img/spartian_9.png" },
-    { num:12, name:"Player 10", pos:"Guard",    height:"", photo:"img/cards/player_10.png", spartan:"img/spartian_10.png" },
-    { num:23, name:"Player 11", pos:"Forward",  height:"", photo:"img/cards/player_11.png", spartan:"img/spartian_11.png" },
-    { num:34, name:"Player 12", pos:"Center",   height:"", photo:"img/cards/player_12.png", spartan:"img/spartian_12.png" }
+    { num:23, name:"Omer Noy", pos:"Shooting Guard", height:"", photo:"img/cards/player_1.png", spartan:"img/spartian_1.png" },
+    { num:11, name:"Amnon Sher", pos:"Point Guard", height:"", photo:"img/cards/player_2.png", spartan:"img/spartian_2.png" },
+    { num:6, name:"Alex Dragomir", pos:"Power Forward", height:"", photo:"img/cards/player_3.png", spartan:"img/spartian_3.png" },
+    { num:0, name:"Declam Onyike", pos:"Shooting Guard", height:"", photo:"img/cards/player_4.png", spartan:"img/spartian_4.png" },
+    { num:8, name:"Yoav Eisenstadt", pos:"Center", height:"", photo:"img/cards/player_5.png", spartan:"img/spartian_5.png" },
+    { num:25, name:"Alexander Schuring", pos:"Small Forward", height:"", photo:"img/cards/player_6.png", spartan:"img/spartian_6.png" },
+    { num:5, name:"Shawn Golan", pos:"Point Guard", height:"", photo:"img/cards/player_7.png", spartan:"img/spartian_7.png", captain:true },
+    { num:42, name:"Siyanda Ntombela", pos:"Small Forward", height:"", photo:"img/cards/player_8.png", spartan:"img/spartian_8.png" },
+    { num:45, name:"Rafael Girgis", pos:"Center", height:"", photo:"img/cards/player_9.png", spartan:"img/spartian_9.png" },
+    { num:7, name:"Sebastian Olijve", pos:"Shooting Guard", height:"", photo:"img/cards/player_10.png", spartan:"img/spartian_10.png" },
+    { num:22, name:"Ocean Malloch-Boulé", pos:"Power Forward", height:"", photo:"img/cards/player_11.png", spartan:"img/spartian_11.png" }
   ],
 
   coaches: [
@@ -293,8 +309,9 @@ document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
 // roster (flip cards)
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const initials = n => n.split(" ").map(w=>w[0]).join("");
-$("players").innerHTML = [...TEAM.players, ...TEAM.coaches.map(c=>({num:"",name:c.name,pos:c.role,height:"",photo:c.photo,spartan:c.spartan||""}))].map(p=>{
-  const label = (tag)=>`<div class="label"><div class="pos">${p.num!==""?"#"+esc(p.num)+" · ":""}${esc(p.pos)}</div><h3>${esc(p.name)}</h3><div class="meta">${[p.height,tag].filter(Boolean).map(esc).join(" · ")}</div></div>`;
+$("players").innerHTML = TEAM.players.map(p=>{
+  const captainTag = p.captain ? `<span class="captain-tag">Captain</span>` : "";
+  const label = (tag)=>`<div class="label"><div class="pos">${p.num!==""?"#"+esc(p.num)+" · ":""}${esc(p.pos)}</div><h3>${esc(p.name)}${captainTag}</h3><div class="meta">${[p.height,tag].filter(Boolean).map(esc).join(" · ")}</div></div>`;
   const front = p.photo ? `<img class="pic" src="${esc(p.photo)}" alt="${esc(p.name)}">` : `<div class="init">${esc(initials(p.name))}</div>`;
   const back = p.spartan ? `<img class="pic ai" src="${esc(p.spartan)}" alt="${esc(p.name)} as a Spartan warrior">`
              : p.photo ? `<img class="pic filtered" src="${esc(p.photo)}" alt="">` : `<div class="init" style="color:#ffb27a">${esc(initials(p.name))}</div>`;
@@ -307,6 +324,12 @@ $("players").innerHTML = [...TEAM.players, ...TEAM.coaches.map(c=>({num:"",name:
 document.querySelectorAll(".flip").forEach(c=>c.onclick=()=>{
   const on = c.classList.toggle("on"); c.setAttribute("aria-pressed", on);
 });
+
+// coaching staff (separate, non-flip section)
+$("coaches").innerHTML = TEAM.coaches.map(c=>{
+  const pic = c.photo ? `<img class="pic" src="${esc(c.photo)}" alt="${esc(c.name)}">` : `<div class="init">${esc(initials(c.name))}</div>`;
+  return `<div class="coach-card">${pic}<div class="label"><div class="pos">${esc(c.role)}</div><h3>${esc(c.name)}</h3></div></div>`;
+}).join("");
 
 // news
 $("newsList").innerHTML = TEAM.news.map(n=>`
