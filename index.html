@@ -31,16 +31,32 @@
   .sub{color:var(--muted);margin-bottom:36px}
 
   /* NAV */
-  nav{position:sticky;top:0;z-index:10;background:rgba(7,21,57,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  nav{position:sticky;top:0;z-index:20;background:rgba(7,21,57,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;position:relative}
   .logo{font-family:Anton;font-size:1.5rem;letter-spacing:.05em}
   .logo{display:flex;align-items:center;gap:10px}
-  .logo img{height:44px;width:44px;border-radius:10px;object-fit:cover}
+  .logo img{height:44px;width:44px;border-radius:10px;object-fit:cover;flex-shrink:0}
   .logo b{color:var(--accent)}
   nav ul{display:flex;gap:22px;list-style:none;font-weight:600;font-size:.9rem}
-  nav ul a{color:var(--muted);transition:.2s}
+  nav ul a{color:var(--muted);transition:.2s;display:inline-block;padding:6px 0}
   nav ul a:hover{color:var(--text)}
-  @media(max-width:700px){nav ul{gap:12px;font-size:.78rem}.logo{font-size:1.2rem}}
+  .nav-toggle{display:none;background:none;border:0;padding:8px;cursor:pointer;width:44px;height:44px;align-items:center;justify-content:center}
+  .nav-toggle span,.nav-toggle span::before,.nav-toggle span::after{content:"";display:block;width:22px;height:2px;background:var(--text);position:relative;transition:.25s}
+  .nav-toggle span::before{position:absolute;top:-7px}
+  .nav-toggle span::after{position:absolute;top:7px}
+  .nav-toggle.on span{background:transparent}
+  .nav-toggle.on span::before{top:0;transform:rotate(45deg)}
+  .nav-toggle.on span::after{top:0;transform:rotate(-45deg)}
+  @media(max-width:700px){
+    .nav-toggle{display:flex}
+    nav ul{position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:#071539;border-bottom:1px solid var(--line);max-height:0;overflow:hidden;transition:max-height .3s ease}
+    nav ul.open{max-height:360px}
+    nav ul li{border-top:1px solid var(--line)}
+    nav ul a{display:block;padding:16px 20px;font-size:1rem}
+    .logo{font-size:1rem;white-space:nowrap}
+    .logo img{height:36px;width:36px}
+  }
+  @media(max-width:380px){.logo{font-size:.85rem}}
 
   /* HERO */
   .hero{position:relative;overflow:hidden;padding:110px 0 90px;
@@ -54,6 +70,11 @@
   .hero-logo{width:100%;max-width:400px;justify-self:center;border-radius:28px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
   .stats{grid-column:1/-1}
   @media(max-width:800px){.hero .wrap{grid-template-columns:1fr}.hero-logo{max-width:240px;grid-row:1}}
+  .hero .cta-row{display:flex;flex-wrap:wrap;gap:14px}
+  @media(max-width:520px){
+    .hero .cta-row{flex-direction:column}
+    .hero .btn,.hero .btn.ghost{width:100%;text-align:center;margin-left:0}
+  }
   .team-photo{width:100%;border-radius:16px;border:1px solid var(--line);display:block}
   .caption{color:var(--muted);text-align:center;margin-top:12px;font-size:.9rem}
   .hero .tag{display:inline-block;background:var(--accent);color:#0a1a44;font-weight:800;font-size:.75rem;padding:4px 12px;border-radius:99px;letter-spacing:.1em;text-transform:uppercase}
@@ -62,9 +83,10 @@
   .hero p{max-width:520px;color:var(--muted);font-size:1.1rem;margin-bottom:28px;position:relative;z-index:1}
   .btn{display:inline-block;background:var(--accent);color:#0a1a44;font-weight:800;padding:14px 28px;border-radius:8px;text-transform:uppercase;letter-spacing:.06em;font-size:.85rem;border:0;cursor:pointer;transition:.2s;position:relative;z-index:1}
   .btn:hover{background:#fff;color:#0a1a44;transform:translateY(-2px)}
-  .btn.ghost{background:transparent;color:var(--text);border:2px solid var(--line);margin-left:10px}
+  .btn.ghost{background:transparent;color:var(--text);border:2px solid var(--line)}
   .btn.ghost:hover{border-color:var(--accent);background:transparent}
   .stats{display:flex;gap:40px;margin-top:56px;flex-wrap:wrap;position:relative;z-index:1}
+  @media(max-width:520px){.stats{gap:28px;margin-top:40px}}
   .stat b{display:block;font-family:Anton;font-size:2.8rem;color:var(--accent);line-height:1}
   .stat span{color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.1em}
 
@@ -150,7 +172,8 @@
 <nav>
   <div class="wrap">
     <a href="#top" class="logo"><img src="img/logo.png" alt="ISL Spartans logo">ISL <b>SPARTANS</b></a>
-    <ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu"><span></span></button>
+    <ul id="navMenu">
       <li><a href="#roster">Roster</a></li>
       <li><a href="#coaching-staff">Coaches</a></li>
       <li><a href="#schedule">Next Game</a></li>
@@ -166,8 +189,10 @@
       <span class="tag" id="seasonTag">Season 2026/27</span>
       <h1>ISL<br><em>Spartans</em></h1>
       <p>International School of Laren basketball.<br>Hard work. Team play. Every game.<br>Follow our season, meet the squad, and come join us.</p>
-      <a href="#roster" class="btn">Meet the Team</a>
-      <a href="#join" class="btn ghost">Join the Team</a>
+      <div class="cta-row">
+        <a href="#roster" class="btn">Meet the Team</a>
+        <a href="#join" class="btn ghost">Join the Team</a>
+      </div>
     </div>
     <img class="hero-logo" src="img/logo.png" alt="ISL Spartans logo">
   </div>
@@ -347,6 +372,19 @@ document.querySelectorAll("#coaches .flip").forEach(c=>c.onclick=()=>{
 $("newsList").innerHTML = TEAM.news.map(n=>`
   <article class="card"><time>${new Date(n.date).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</time>
   <h3>${esc(n.title)}</h3><p>${esc(n.text)}</p></article>`).join("");
+
+// mobile nav menu
+const navToggle = $("navToggle"), navMenu = $("navMenu");
+navToggle.addEventListener("click", () => {
+  const open = navMenu.classList.toggle("open");
+  navToggle.classList.toggle("on", open);
+  navToggle.setAttribute("aria-expanded", open);
+});
+navMenu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+  navMenu.classList.remove("open");
+  navToggle.classList.remove("on");
+  navToggle.setAttribute("aria-expanded", "false");
+}));
 
 </script>
 </body>
